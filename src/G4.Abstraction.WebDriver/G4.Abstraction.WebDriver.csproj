@@ -26,9 +26,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\..\docs\packages-readme\G4.Abstraction.WebDriver.md" Link="G4.Abstraction.WebDriver.md">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
+		<None Include="..\..\docs\packages-readme\G4.Abstraction.WebDriver.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>
