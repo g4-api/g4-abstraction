@@ -1,0 +1,169 @@
+#
+# Inputs (Action Inputs)  : kebab-case (all lowercase letters with hyphens)
+# Outputs (Action Outputs): camelCase (lowercase first letter with uppercase subsequent words)
+# Environment Variables   : UPPERCASE_WITH_UNDERSCORES
+# Job Names               : PascalCase or Title Case
+# Step IDs                : snake_case or kebab-case
+#
+name: Build, Test & Release
+
+# Permissions for the workflow
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+  statuses: write
+
+# Trigger workflow on push to the main branch
+on:
+  push:
+    branches:
+      - main
+
+env:
+  #
+  # Build and release settings
+  ARTIFACT_TYPE       : 'Production'
+  DOTNET_VERSION      : '8.0.x'
+  BINARIES_DIRECTORY  : ${{ github.workspace }}/binaries
+  BUILD_CONFIGURATION : 'Release'
+  SOLUTION_NAME       : 'G4'
+  STAGE_DIRECTORY     : ${{ github.workspace }}/artifact_staging
+  #
+  # Publish settings
+  NUGET_API_KEY       : ${{ secrets.NUGET_PUBLIC_KEY }}
+  NUGET_SOURCE        : ${{ vars.NUGET_PUBLIC_SOURCE }}
+  #
+  # Test settings
+  BROWSERSTACK_API_KEY: ${{ secrets.BROWSERSTACK_API_KEY }}
+  BROWSERSTACK_USER   : ${{ secrets.BROWSERSTACK_USER }}
+  G4_API_KEY          : ${{ secrets.G4_API_KEY }}
+  GRID_ENDPOINT       : ${{ secrets.GRID_ENDPOINT }}
+  RUN_SETTINGS_FILE   : 'Default.runsettings'
+  TEST_WORKERS        : '5'
+
+# Default settings for all run steps
+defaults:
+  run:
+    working-directory: src
+
+jobs:
+  NewVersion:
+    name: New Version
+    runs-on: ubuntu-latest
+    outputs:
+      buildVersion: ${{ steps.parse-version.outputs.version }}
+      validVersion: ${{ steps.validate-version.outputs.valid }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Parse Build Version for GitHub Tag
+      id: parse-version
+      shell: pwsh
+      run: echo "version=$(Get-Date -UFormat '%Y.%m.%d').${{ github.run_number }}" >> $env:GITHUB_OUTPUT
+
+    - name: Validate Version ${{ steps.parse-version.outputs.version }}
+      id: validate-version
+      shell: pwsh
+      run: |
+        $version = "${{ steps.parse-version.outputs.version }}"
+        echo "valid=$($version -match '^\d+(\.\d+){3}$')" >> $env:GITHUB_OUTPUT
+
+  NewBuild:
+    name: Restore & Build
+    runs-on: ubuntu-latest
+    if: ${{ needs.NewVersion.result == 'success' && needs.NewVersion.outputs.validVersion == 'True' }}
+    needs: 
+      - NewVersion
+
+    env:
+      BUILD_VERSION: ${{ needs.NewVersion.outputs.buildVersion }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: "${{ env.DOTNET_VERSION }}"
+
+    - name: Restore Dependencies
+      shell: pwsh 
+      run: dotnet restore
+
+    - name: Build ${{ env.SOLUTION_NAME }} v${{ env.BUILD_VERSION }}
+      shell: pwsh
+      run: dotnet build
+
+  PublishNugetPackages:
+    name: Publish & Push NuGet Packages v${{ needs.NewVersion.outputs.buildVersion }}
+    runs-on: ubuntu-latest
+    if: ${{ needs.InvokeTests.result == 'success' }}
+    needs: 
+      - NewVersion
+
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+
+    env:
+      BUILD_VERSION: ${{ needs.NewVersion.outputs.buildVersion }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: New Packages v${{ env.BUILD_VERSION }}
+      shell: pwsh
+      run: dotnet pack -o ${{ env.STAGE_DIRECTORY }} -c ${{ env.BUILD_CONFIGURATION }} /p:Version=${{ env.BUILD_VERSION }}
+      working-directory: src
+
+    - name: Publish Build Artifacts to NuGet Feed
+      shell: pwsh
+      run: |
+        dotnet nuget push "${{ env.STAGE_DIRECTORY }}/*.nupkg" --api-key ${{ env.NUGET_API_KEY }} --source ${{ env.NUGET_SOURCE }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages-drop-v${{ env.BUILD_VERSION }}
+        path: ${{ env.STAGE_DIRECTORY }}/*.nupkg
+
+  NewRelease:
+    name: New GitHub Release Version ${{ needs.NewVersion.outputs.buildVersion }}
+    runs-on: ubuntu-latest
+    if: ${{ needs.NewVersion.result == 'success' && needs.NewVersion.outputs.validVersion == 'True' && needs.PublishNugetPackages.result == 'success' }}
+    needs:
+      - NewVersion
+      - PublishNugetPackages
+      - PublishTools
+
+    env:
+      BUILD_VERSION: ${{ needs.NewVersion.outputs.buildVersion }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ${{ env.STAGE_DIRECTORY }}
+
+    - name: List Downloaded Files
+      run: |
+        ls -R ${{ env.STAGE_DIRECTORY }}
+
+    - name: Create GitHub Release & Tag v${{ env.BUILD_VERSION }}
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          **/*.zip
+          **/*.nupkg
+        tag_name: v${{ env.BUILD_VERSION }}
+        name: ${{ env.ARTIFACT_TYPE }} v${{ env.BUILD_VERSION }}
+        generate_release_notes: true

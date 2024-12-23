@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G4.Abstraction.Cli", "G4.Abstraction.Cli\G4.Abstraction.Cli.csproj", "{D7D07DD7-5774-4E3E-929C-66E162EC3300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G4.Abstraction.Logging", "G4.Abstraction.Logging\G4.Abstraction.Logging.csproj", "{6A6A2C93-C247-4B04-A7CE-F3FB7DDABBD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G4.Abstraction.WebDriver", "G4.Abstraction.WebDriver\G4.Abstraction.WebDriver.csproj", "{D6741F25-B33A-4CC3-8688-A9FB8B00931A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{7D424031-F4F1-4842-B2B7-D38A985B41B2}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\packages-readme\G4.Abstraction.Cli.md = ..\docs\packages-readme\G4.Abstraction.Cli.md
+		..\docs\packages-readme\G4.Abstraction.Logging.md = ..\docs\packages-readme\G4.Abstraction.Logging.md
+		..\docs\packages-readme\G4.Abstraction.WebDriver.md = ..\docs\packages-readme\G4.Abstraction.WebDriver.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".git", ".git", "{E8CF8F42-68C1-4FEE-9B55-92038AF3435C}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{04855F33-CD3A-482F-950C-0DF17555D3EE}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\release-pipline.yml = ..\.github\workflows\release-pipline.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7D07DD7-5774-4E3E-929C-66E162EC3300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D07DD7-5774-4E3E-929C-66E162EC3300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D07DD7-5774-4E3E-929C-66E162EC3300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D07DD7-5774-4E3E-929C-66E162EC3300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A6A2C93-C247-4B04-A7CE-F3FB7DDABBD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A6A2C93-C247-4B04-A7CE-F3FB7DDABBD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A6A2C93-C247-4B04-A7CE-F3FB7DDABBD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A6A2C93-C247-4B04-A7CE-F3FB7DDABBD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

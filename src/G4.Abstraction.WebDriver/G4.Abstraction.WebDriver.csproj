@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- Assembly -->
+		<TargetFramework>net8.0</TargetFramework>
+		<AssemblyVersion>8.0.0.0</AssemblyVersion>
+		<FileVersion>8.0.0.0</FileVersion>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+		<LangVersion>latest</LangVersion>
+
+		<!-- Package -->
+		<PackageId>G4.Abstraction.WebDriver</PackageId>
+		<Title>G4.Abstraction.WebDriver</Title>
+		<PackageProjectUrl>https://github.com/g4-api</PackageProjectUrl>
+		<Authors>G4™ API Community</Authors>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>Apache-2.0+</PackageLicenseExpression>
+		<PackageReadmeFile>G4.Abstraction.WebDriver.md</PackageReadmeFile>
+		<Description>Provides an abstraction layer for creating WebDriver instances with configurable parameters. This library allows developers to initialize WebDriver instances with options for command timeouts, driver types, binary paths (local file path or grid endpoint), service configurations, and driver capabilities. It simplifies the setup process for automated browser interactions in remote or local environments.</Description>
+		<PackageTags>WebDriver;Automation;Testing;RPA;G4</PackageTags>
+		<Copyright>Copyright 2023 (c) Roei Sabag &amp; HRC Corporation. All rights reserved.</Copyright>
+
+		<!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib1040-1049 -->
+		<NoWarn>$(NoWarn);SYSLIB1045;IDE0130</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\docs\packages-readme\G4.Abstraction.WebDriver.md" Link="G4.Abstraction.WebDriver.md" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="G4.Cache" Version="2024.11.22.8" />
+		<PackageReference Include="G4.WebDriver" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Android" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Appium" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Chrome" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Chromium" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Edge" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Firefox" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Opera" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Simulator" Version="2024.11.14.75" />
+		<PackageReference Include="G4.WebDriver.Remote.Uia" Version="2024.11.14.75" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+</Project>
