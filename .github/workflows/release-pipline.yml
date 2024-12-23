@@ -101,9 +101,10 @@ jobs:
   PublishNugetPackages:
     name: Publish & Push NuGet Packages v${{ needs.NewVersion.outputs.buildVersion }}
     runs-on: ubuntu-latest
-    if: ${{ needs.InvokeTests.result == 'success' }}
+    if: ${{ needs.NewBuild.result == 'success' }}
     needs: 
       - NewVersion
+      - NewBuild
 
     defaults:
       run:
