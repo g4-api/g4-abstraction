@@ -139,7 +139,6 @@ jobs:
     needs:
       - NewVersion
       - PublishNugetPackages
-      - PublishTools
 
     env:
       BUILD_VERSION: ${{ needs.NewVersion.outputs.buildVersion }}
