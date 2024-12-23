@@ -26,7 +26,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\..\docs\packages-readme\G4.Abstraction.Cli.md" Link="G4.Abstraction.Cli.md" />
+		<None Include="..\..\docs\packages-readme\G4.Abstraction.Cli.md" Link="G4.Abstraction.Cli.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>
