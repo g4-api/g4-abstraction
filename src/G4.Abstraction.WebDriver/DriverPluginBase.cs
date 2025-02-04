@@ -3,6 +3,7 @@ using G4.WebDriver.Models;
 using G4.WebDriver.Remote;
 
 using System;
+using System.Linq;
 
 namespace G4.Abstraction.WebDriver
 {
@@ -187,8 +188,18 @@ namespace G4.Abstraction.WebDriver
                 userSession.DesiredCapabilities[item.Key] = item.Value;
             }
 
-            // Set FirstMatch capabilities of the user session.
-            userSession.Capabilities.FirstMatch = session.Capabilities.FirstMatch;
+            // Initialize the FirstMatch of the session.
+            session.Capabilities.FirstMatch ??= [];
+
+            // Initialize the FirstMatch capabilities in the user session.
+            userSession.Capabilities.FirstMatch ??= [];
+
+            // Merge the FirstMatch capabilities from the session into the user session.
+            userSession.Capabilities.FirstMatch = userSession
+                .Capabilities
+                .FirstMatch
+                .Concat(session.Capabilities.FirstMatch)
+                .Where(i => i.Keys.Count > 0);
 
             // Return the created user session.
             return userSession;
