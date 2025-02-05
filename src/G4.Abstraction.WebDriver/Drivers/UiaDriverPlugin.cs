@@ -24,7 +24,7 @@ namespace G4.Abstraction.WebDriver.Drivers
         protected override IWebDriver OnNewRemoteDriver(string binariesPath, SessionModel session, TimeSpan timeout)
         {
             // Create and return a new remote instance of the UiaDriver.
-            return new RemoteWebDriver(binariesPath, session);
+            return new UiaDriver(binariesPath, session);
         }
     }
 }
