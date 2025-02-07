@@ -32,7 +32,7 @@ namespace G4.Abstraction.WebDriver
             var options = new TOption();
 
             // Build the user session using specified options and session model.
-            var userSession = NewSessionModel(options, session).Build();
+            var userSession = NewSessionModel(options, session);
 
             // Instantiate a new WebDriver service.
             var service = Activator.CreateInstance(typeof(TService), binariesPath);
@@ -99,7 +99,7 @@ namespace G4.Abstraction.WebDriver
             var options = new TOption();
 
             // Build the user session using specified options and session model.
-            var userSession = NewSessionModel(options, session).Build();
+            var userSession = NewSessionModel(options, session);
 
             // Instantiate a new WebDriverCommandInvoker.
             var invoker = new WebDriverCommandInvoker(new Uri(binariesPath), timeout);
@@ -124,7 +124,7 @@ namespace G4.Abstraction.WebDriver
             var options = new TOption();
 
             // Build the user session using specified options and session model.
-            var userSession = NewSessionModel(options, session).Build();
+            var userSession = NewSessionModel(options, session);
 
             // Instantiate a new WebDriverCommandInvoker.
             var invoker = new WebDriverCommandInvoker(new Uri(binariesPath), timeout);
@@ -182,23 +182,16 @@ namespace G4.Abstraction.WebDriver
                 userSession.Capabilities.AlwaysMatch[item.Key] = item.Value;
             }
 
-            // Transfer desired capabilities from the session to the user session.
-            foreach (var item in session.DesiredCapabilities)
-            {
-                userSession.DesiredCapabilities[item.Key] = item.Value;
-            }
-
             // Initialize the FirstMatch of the session.
-            session.Capabilities.FirstMatch ??= [];
+            session.FirstMatch ??= [];
 
             // Initialize the FirstMatch capabilities in the user session.
-            userSession.Capabilities.FirstMatch ??= [];
+            userSession.FirstMatch ??= [];
 
             // Merge the FirstMatch capabilities from the session into the user session.
-            userSession.Capabilities.FirstMatch = userSession
-                .Capabilities
+            userSession.FirstMatch = userSession
                 .FirstMatch
-                .Concat(session.Capabilities.FirstMatch)
+                .Concat(session.FirstMatch)
                 .Where(i => i.Keys.Count > 0);
 
             // Return the created user session.

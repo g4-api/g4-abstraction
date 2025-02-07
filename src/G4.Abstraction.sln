@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{0485
 		..\.github\workflows\release-pipline.yml = ..\.github\workflows\release-pipline.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{0B97D54A-1903-4A8E-BAAA-8B157BAD652D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6741F25-B33A-4CC3-8688-A9FB8B00931A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B97D54A-1903-4A8E-BAAA-8B157BAD652D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B97D54A-1903-4A8E-BAAA-8B157BAD652D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B97D54A-1903-4A8E-BAAA-8B157BAD652D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B97D54A-1903-4A8E-BAAA-8B157BAD652D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

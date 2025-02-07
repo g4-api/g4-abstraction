@@ -88,13 +88,13 @@ namespace G4.Abstraction.WebDriver
 
             // Set capabilities using provided values or default to empty models
             var capabilities = driverParams.Find("capabilities", new CapabilitiesModel());
-            var desiredCapabilities = driverParams.Find("desiredCapabilities", NewDictionary());
+            var desiredCapabilities = driverParams.Find("firstMatch", Enumerable.Empty<IDictionary<string, object>>());
 
             // Create and assign a new session model
             _sessionModel = new SessionModel
             {
                 Capabilities = capabilities,
-                DesiredCapabilities = desiredCapabilities,
+                FirstMatch = desiredCapabilities,
             };
         }
         #endregion

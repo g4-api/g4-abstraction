@@ -82,13 +82,6 @@ namespace G4.Extensions
                 .GetProperties(Flags)
                 .Where(i => i.SetMethod != null);
 
-            // Set properties based on desired capabilities
-            foreach (var item in model.DesiredCapabilities)
-            {
-                var property = targetProperties.FirstOrDefault(i => i.Name.Equals(item.Key, Compare));
-                property?.SetValue(instance, item.Value);
-            }
-
             // Set properties based on capabilities always matching
             foreach (var item in model.Capabilities.AlwaysMatch)
             {
