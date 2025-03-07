@@ -30,17 +30,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="G4.Cache" Version="2025.2.6.28" />
-		<PackageReference Include="G4.WebDriver" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Android" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Appium" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Chrome" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Chromium" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Edge" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Firefox" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Opera" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Remote.Uia" Version="2025.2.7.9" />
-		<PackageReference Include="G4.WebDriver.Simulator" Version="2025.2.7.9" />
+		<PackageReference Include="G4.Cache" Version="2025.2.18.33" />
+		<PackageReference Include="G4.WebDriver" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Android" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Appium" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Chrome" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Chromium" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Edge" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Firefox" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Opera" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Remote.Uia" Version="2025.3.7.10" />
+		<PackageReference Include="G4.WebDriver.Simulator" Version="2025.3.7.10" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
