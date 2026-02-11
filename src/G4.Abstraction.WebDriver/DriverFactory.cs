@@ -29,11 +29,11 @@ namespace G4.Abstraction.WebDriver
     {
         #region *** Fields       ***
         // Provides access to a collection of driver plugins.
-        private static ReadOnlyCollection<Type> s_driverPlugins = new(CacheManager
+        private static ReadOnlyCollection<Type> s_driverPlugins = [.. CacheManager
             .Types
             .Values
             .Where(i => i.ConfirmDriverPlugin())
-            .ToList());
+            .ToList()];
 
         // Represents the default JSON serializer options used for serialization and deserialization.
         private static readonly JsonSerializerOptions s_jsonOptions = new()
@@ -110,7 +110,7 @@ namespace G4.Abstraction.WebDriver
                 if (s_driverPlugins.Count != 0)
                 {
                     var types = CacheManager.Types.Values.Where(i => i.ConfirmDriverPlugin()).ToList();
-                    s_driverPlugins = new(types);
+                    s_driverPlugins = [.. types];
                 }
 
                 // Return the populated collection

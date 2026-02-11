@@ -2,9 +2,9 @@
 
 	<PropertyGroup>
 		<!-- Assembly -->
-		<TargetFramework>net8.0</TargetFramework>
-		<AssemblyVersion>8.0.0.0</AssemblyVersion>
-		<FileVersion>8.0.0.0</FileVersion>
+		<TargetFramework>net10.0</TargetFramework>
+		<AssemblyVersion>10.0.0.0</AssemblyVersion>
+		<FileVersion>10.0.0.0</FileVersion>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
 		<LangVersion>latest</LangVersion>
@@ -30,7 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="G4.Cache" Version="2025.2.18.33" />
+		<PackageReference Include="G4.Cache" Version="2026.2.9.47" />
 		<PackageReference Include="G4.WebDriver" Version="2025.3.7.10" />
 		<PackageReference Include="G4.WebDriver.Remote.Android" Version="2025.3.7.10" />
 		<PackageReference Include="G4.WebDriver.Remote.Appium" Version="2025.3.7.10" />
@@ -41,7 +41,7 @@
 		<PackageReference Include="G4.WebDriver.Remote.Opera" Version="2025.3.7.10" />
 		<PackageReference Include="G4.WebDriver.Remote.Uia" Version="2025.3.7.10" />
 		<PackageReference Include="G4.WebDriver.Simulator" Version="2025.3.7.10" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	</ItemGroup>
 
 </Project>
