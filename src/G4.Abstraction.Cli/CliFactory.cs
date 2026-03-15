@@ -231,10 +231,15 @@ namespace G4.Abstraction.Cli
             var results = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             // Group the arguments by their key using the specified key pattern
-            foreach (var group in arguments.GroupBy(i => Regex.Match(i.ToUpper(), keyPattern).Value))
+            foreach (var group in arguments.GroupBy(i => Regex.Match(i, keyPattern).Value))
             {
+                // Convert the group key to uppercase for consistent processing
+                var groupKey = group.Key.ToUpper();
+
                 // Get the key for the current group of arguments
-                var key = normalize ? ConvertToPascalCase(group.Key) : group.Key;
+                var key = normalize
+                    ? ConvertToPascalCase(groupKey)
+                    : group.Key;
 
                 // Check if the group has no elements (arguments)
                 if (!group.Any())
