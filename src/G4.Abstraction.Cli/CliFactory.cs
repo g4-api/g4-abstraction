@@ -76,6 +76,25 @@ namespace G4.Abstraction.Cli
         /// Converts a Command-Line Interface (CLI) string into a dictionary of key-value pairs using default patterns.
         /// </summary>
         /// <param name="cli">The CLI string to convert.</param>
+        /// <param name="normalize">Indicates whether to normalize the keys in the resulting dictionary default is <c>true</c>.</param>
+        /// <returns>A dictionary of parsed CLI arguments with case-insensitive keys.</returns>
+        public IDictionary<string, string> ConvertToDictionary(string cli, bool normalize)
+        {
+            // Delegate the conversion to the ConvertToDictionary method with default patterns.
+            return ConvertToDictionary(
+                cli,
+                cliPattern: CliTemplatePattern,
+                argumentPattern: ArgumentPattern,
+                expressionPattern: NestedCliExpressionPattern,
+                keyPattern: ArgumentKeyPattern,
+                valuePattern: ArgumentValuePattern,
+                normalize);
+        }
+
+        /// <summary>
+        /// Converts a Command-Line Interface (CLI) string into a dictionary of key-value pairs using default patterns.
+        /// </summary>
+        /// <param name="cli">The CLI string to convert.</param>
         /// <returns>A dictionary of parsed CLI arguments with case-insensitive keys.</returns>
         public IDictionary<string, string> ConvertToDictionary(string cli)
         {
@@ -86,7 +105,8 @@ namespace G4.Abstraction.Cli
                 argumentPattern: ArgumentPattern,
                 expressionPattern: NestedCliExpressionPattern,
                 keyPattern: ArgumentKeyPattern,
-                valuePattern: ArgumentValuePattern);
+                valuePattern: ArgumentValuePattern,
+                normalize: true);
         }
 
         // Parses a Command-Line Interface (CLI) string into a dictionary of key-value pairs.
@@ -96,13 +116,14 @@ namespace G4.Abstraction.Cli
             string argumentPattern,
             string expressionPattern,
             string keyPattern,
-            string valuePattern)
+            string valuePattern,
+            bool normalize)
         {
             // Check if the 'cli' string is null or empty.
             // If 'cli' is null or empty, return an empty dictionary with case-insensitive key comparison.
             if (string.IsNullOrEmpty(cli))
             {
-                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                return new(StringComparer.OrdinalIgnoreCase);
             }
 
             // Extract the clean CLI string by matching the CLI pattern.
@@ -123,7 +144,11 @@ namespace G4.Abstraction.Cli
                 .Where(arg => !string.IsNullOrEmpty(arg));
 
             // Create a dictionary to store the parsed CLI arguments.
-            var arguments = ExportKeyValues(argumentsList, keyPattern, valuePattern);
+            var arguments = ExportKeyValues(
+                argumentsList,
+                keyPattern,
+                valuePattern,
+                normalize);
 
             // Serialize the dictionary to JSON for processing nested patterns.
             var argumentsJson = JsonSerializer.Serialize(arguments);
@@ -161,7 +186,10 @@ namespace G4.Abstraction.Cli
 
         // Extracts key-value pairs from a collection of arguments based on specified key and value patterns.
         private static Dictionary<string, string> ExportKeyValues(
-            IEnumerable<string> arguments, string keyPattern, string valuePattern)
+            IEnumerable<string> arguments,
+            string keyPattern,
+            string valuePattern,
+            bool normalize)
         {
             // Local function to convert a string to PascalCase
             static string ConvertToPascalCase(string input)
@@ -206,7 +234,7 @@ namespace G4.Abstraction.Cli
             foreach (var group in arguments.GroupBy(i => Regex.Match(i.ToUpper(), keyPattern).Value))
             {
                 // Get the key for the current group of arguments
-                var key = ConvertToPascalCase(group.Key);
+                var key = normalize ? ConvertToPascalCase(group.Key) : group.Key;
 
                 // Check if the group has no elements (arguments)
                 if (!group.Any())
