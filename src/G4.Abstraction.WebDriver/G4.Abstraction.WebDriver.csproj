@@ -30,7 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="G4.Cache" Version="2026.2.9.47" />
+		<PackageReference Include="G4.Cache" Version="2026.3.19.59" />
 		<PackageReference Include="G4.WebDriver" Version="2025.3.7.10" />
 		<PackageReference Include="G4.WebDriver.Remote.Android" Version="2025.3.7.10" />
 		<PackageReference Include="G4.WebDriver.Remote.Appium" Version="2025.3.7.10" />
