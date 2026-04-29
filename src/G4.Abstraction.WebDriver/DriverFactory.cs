@@ -53,6 +53,7 @@ namespace G4.Abstraction.WebDriver
         private readonly int _commandTimeout;                  // The command timeout value associated with the instance.
         private readonly string _driver;                       // The driver associated with the instance.
         private readonly string _driverBinaries;               // The path to the driver binaries associated with the instance.
+        private readonly TimeoutModel _timeouts;               // The timeout model associated with the instance.
         #endregion
 
         #region *** Constructors ***
@@ -77,14 +78,17 @@ namespace G4.Abstraction.WebDriver
             // Set the command timeout, default to 60 seconds if not provided
             _commandTimeout = driverParams.Find("commandTimeout", 60000);
 
-            // Set the driver type, default to "EdgeDriver" if not provided
-            _driver = driverParams.Find(path: "driver", defaultValue: "MicrosoftEdgeDriver");
+            // Set the driver type, default to "ChromeDriver" if not provided
+            _driver = driverParams.Find(path: "driver", defaultValue: "ChromeDriver");
 
             // Set the path for driver binaries, default to the current directory if not provided
             _driverBinaries = driverParams.Find("driverBinaries", ".");
 
             // Set the service configuration, default to an empty dictionary if not provided
             _service = driverParams.Find("service", NewDictionary());
+
+            // Set the timeouts, default to a new TimeoutModel if not provided
+            _timeouts = driverParams.Find("timeouts", new TimeoutModel());
 
             // Set capabilities using provided values or default to empty models
             var capabilities = driverParams.Find("capabilities", new CapabilitiesModel());
@@ -150,7 +154,25 @@ namespace G4.Abstraction.WebDriver
             };
 
             // Invoke the method to create and return a new WebDriver instance
-            return (IWebDriver)method.Invoke(instance, arguments);
+            var driver = (IWebDriver)method.Invoke(instance, arguments);
+
+            // Set the timeouts for the driver based on the
+            // provided timeout values or defaults if not provided in the driver parameters
+            try
+            {
+                driver.Manage().Timeouts.Implicit = TimeSpan.FromMilliseconds(_timeouts.Implicit);
+                driver.Manage().Timeouts.PageLoad = TimeSpan.FromMilliseconds(_timeouts.PageLoad);
+                driver.Manage().Timeouts.Script = TimeSpan.FromMilliseconds(_timeouts.Script);
+            }
+            catch
+            {
+                // Silently catch any exceptions that occur while setting
+                // timeouts, as not all drivers may support all timeout types
+            }
+
+            // Return the configured WebDriver instance to the
+            // caller for use in automation tasks and interactions with web applications
+            return driver;
         }
 
         // Gets the driver type and method based on the specified driver name and remote status.
@@ -212,6 +234,41 @@ namespace G4.Abstraction.WebDriver
 
             // Return the tuple containing the driver type and method
             return (type, method);
+        }
+        #endregion
+
+        #region *** Nested Types ***
+        /// <summary>
+        /// Represents timeout settings, in milliseconds, for a WebDriver-compatible session.
+        /// </summary>
+        private class TimeoutModel
+        {
+            /// <summary>
+            /// Gets or sets the implicit wait timeout.
+            /// </summary>
+            /// <remarks>
+            /// This controls how long element lookup commands may wait while trying to find an element.
+            /// A value of <c>0</c> disables implicit waiting.
+            /// </remarks>
+            public int Implicit { get; set; } = 0;
+
+            /// <summary>
+            /// Gets or sets the page load timeout.
+            /// </summary>
+            /// <remarks>
+            /// This controls how long navigation commands may wait for a page load to complete.
+            /// The default value is <c>300000</c> milliseconds, or 5 minutes.
+            /// </remarks>
+            public int PageLoad { get; set; } = 300000;
+
+            /// <summary>
+            /// Gets or sets the script execution timeout.
+            /// </summary>
+            /// <remarks>
+            /// This controls how long asynchronous script execution may run before timing out.
+            /// The default value is <c>180000</c> milliseconds, or 3 minutes.
+            /// </remarks>
+            public int Script { get; set; } = 180000;
         }
         #endregion
     }
