@@ -13,7 +13,18 @@ namespace G4.Abstraction.Cli
     /// </summary>
     public class CliFactory
     {
-        #region *** Properties ***
+        #region *** Constants    ***
+        // Retains the published nested-expression pattern for subclass overrides and malformed-input fallback.
+        private const string DefaultNestedCliExpressionPattern = @"\{\{\$.*?(?<={{[$]).*}}";
+
+        // Marks the delimiter that closes one nested CLI expression level.
+        private const string NestedCliExpressionEnd = "}}";
+
+        // Marks the delimiter that opens one nested CLI expression level.
+        private const string NestedCliExpressionStart = "{{$";
+        #endregion
+
+        #region *** Properties   ***
         /// <summary>
         /// Gets the regular expression pattern for extracting the CLI template from a larger string.
         /// </summary>
@@ -41,8 +52,12 @@ namespace G4.Abstraction.Cli
         /// <summary>
         /// Gets the regular expression pattern for extracting nested CLI expressions within the template.
         /// </summary>
+        /// <remarks>
+        /// Overrides continue to use regular-expression extraction. The built-in pattern uses balanced delimiter
+        /// scanning and retains this pattern as a compatibility fallback for malformed input.
+        /// </remarks>
         [StringSyntax(StringSyntaxAttribute.Regex)]
-        protected virtual string NestedCliExpressionPattern => @"\{\{\$.*?(?<={{[$]).*}}";
+        protected virtual string NestedCliExpressionPattern => DefaultNestedCliExpressionPattern;
 
         /// <summary>
         /// Gets a value indicating whether the object is compliant with the Command-Line Interface (CLI) standard or format.
@@ -50,7 +65,7 @@ namespace G4.Abstraction.Cli
         public bool IsCliCompliant { get; }
         #endregion
 
-        #region *** Methods    ***
+        #region *** Methods      ***
         /// <summary>
         /// Confirms the validity of a Command-Line Interface (CLI) against the current CLI template pattern.
         /// </summary>
@@ -169,8 +184,8 @@ namespace G4.Abstraction.Cli
         // Extracts nested Command-Line Interface (CLI) expressions and encodes them for mapping.
         private static Dictionary<string, string> ExportNestedExpressions(string cli, string expressionPattern)
         {
-            // Use regular expressions to find nested CLI expressions and select them.
-            var nestedExpressions = Regex.Matches(cli, expressionPattern).Select(match => match.Value);
+            // Select complete built-in expressions without merging adjacent values, while retaining custom regex behavior.
+            var nestedExpressions = GetNestedExpressions(cli, expressionPattern);
 
             // Create a dictionary to store the nested expressions and their encoded values.
             var expressionMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -260,6 +275,94 @@ namespace G4.Abstraction.Cli
 
             // Return the populated results dictionary containing extracted key-value pairs
             return results;
+        }
+
+        // Finds the exclusive end index of one balanced nested expression without allocating intermediate substrings.
+        // The scan owns no state outside the call and reports an unmatched opening delimiter through a negative index.
+        private static int GetNestedExpressionEnd(string cli, int expressionStart)
+        {
+            // Start after the known opening delimiter so every later opener contributes one nested level.
+            var depth = 1;
+            var index = expressionStart + NestedCliExpressionStart.Length;
+
+            while (index < cli.Length)
+            {
+                // Track inner expressions so their closing delimiters remain part of the outer parameter value.
+                if (cli.AsSpan(index).StartsWith(NestedCliExpressionStart, StringComparison.Ordinal))
+                {
+                    depth++;
+                    index += NestedCliExpressionStart.Length;
+                    continue;
+                }
+
+                // Close one expression level and return only when the original opening delimiter is balanced.
+                if (cli.AsSpan(index).StartsWith(NestedCliExpressionEnd, StringComparison.Ordinal))
+                {
+                    depth--;
+                    index += NestedCliExpressionEnd.Length;
+
+                    if (depth == 0)
+                    {
+                        return index;
+                    }
+
+                    continue;
+                }
+
+                index++;
+            }
+
+            // Signal malformed input so the caller can preserve the parser's historical regex behavior.
+            return -1;
+        }
+
+        // Selects each outermost nested CLI value through balanced delimiters for the built-in parser pattern.
+        // Custom patterns and malformed built-in expressions retain regex extraction for compatibility.
+        private static IEnumerable<string> GetNestedExpressions(string cli, string expressionPattern)
+        {
+            // Preserve the public subclass extension point by routing every custom pattern through its original matcher.
+            if (!string.Equals(expressionPattern, DefaultNestedCliExpressionPattern, StringComparison.Ordinal))
+            {
+                return Regex.Matches(cli, expressionPattern).Select(match => match.Value);
+            }
+
+            var nestedExpressions = new List<string>();
+            var searchIndex = 0;
+
+            while (searchIndex < cli.Length)
+            {
+                // Find the next delimiters after the previous complete expression.
+                var expressionStart = cli.IndexOf(NestedCliExpressionStart, searchIndex, StringComparison.Ordinal);
+                var unexpectedExpressionEnd = cli.IndexOf(NestedCliExpressionEnd, searchIndex, StringComparison.Ordinal);
+
+                // Preserve historical parsing when a closing delimiter appears outside a nested expression.
+                var hasUnmatchedEnd = unexpectedExpressionEnd >= 0 &&
+                    (expressionStart < 0 || unexpectedExpressionEnd < expressionStart);
+
+                if (hasUnmatchedEnd)
+                {
+                    return Regex.Matches(cli, expressionPattern).Select(match => match.Value);
+                }
+
+                if (expressionStart < 0)
+                {
+                    return nestedExpressions;
+                }
+
+                // Match this value independently so later sibling arguments cannot be absorbed into it.
+                var expressionEnd = GetNestedExpressionEnd(cli, expressionStart);
+
+                if (expressionEnd < 0)
+                {
+                    // Preserve historical parsing for incomplete templates instead of exposing new top-level arguments.
+                    return Regex.Matches(cli, expressionPattern).Select(match => match.Value);
+                }
+
+                nestedExpressions.Add(cli[expressionStart..expressionEnd]);
+                searchIndex = expressionEnd;
+            }
+
+            return nestedExpressions;
         }
         #endregion
     }
