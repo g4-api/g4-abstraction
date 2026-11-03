@@ -26,6 +26,11 @@ var j = """
                 }
             }
         },
+        "timeouts": {
+          "implicit": 0,
+          "pageLoad": 600000,
+          "script": 360000
+        },
         "driver": "ChromeDriver",
         "driverBinaries": "E:\\G4\\g4-sandbox-v2026.03.22.66\\drivers\\chrome",
         "firstMatch": [
@@ -67,6 +72,26 @@ var driverParameters = new Dictionary<string, object>
 var driver = new DriverFactory(driverParameters).NewDriver();
 
 driver.Dispose();
+
+//driverParameters = new Dictionary<string, object>
+//{
+//    ["driverBinaries"] = "http://localhost:5556/wd/hub", // or a folder with Sap.DriverServer.exe, or a grid hub
+//    ["driver"] = "SapDriver",
+//    ["capabilities"] = new Dictionary<string, object>
+//    {
+//        ["alwaysMatch"] = new Dictionary<string, object>
+//        {
+//            ["sap:options"] = new Dictionary<string, object>
+//            {
+//                ["connectionIndex"] = 0,
+//                ["sessionIndex"] = 0
+//            }
+//        }
+//    }
+//};
+//
+//driver = new DriverFactory(driverParameters).NewDriver();
+//driver.Dispose();
 
 driverParameters = new Dictionary<string, object>
 {

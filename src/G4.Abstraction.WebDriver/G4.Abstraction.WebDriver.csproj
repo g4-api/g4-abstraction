@@ -39,6 +39,7 @@
 		<PackageReference Include="G4.WebDriver.Remote.Edge" Version="2026.11.1.14" />
 		<PackageReference Include="G4.WebDriver.Remote.Firefox" Version="2026.11.1.14" />
 		<PackageReference Include="G4.WebDriver.Remote.Opera" Version="2026.11.1.14" />
+		<PackageReference Include="G4.WebDriver.Remote.Sap" Version="2026.11.1.14" />
 		<PackageReference Include="G4.WebDriver.Remote.Uia" Version="2026.11.1.14" />
 		<PackageReference Include="G4.WebDriver.Simulator" Version="2026.11.1.14" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
