@@ -35,3 +35,7 @@ Contributions, bug reports, and feature requests are welcome. Please open an iss
 ## License
 
 All libraries in the G4.Abstraction solution are released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  
+
+## Contributing and builds
+
+Build tools, test commands, version numbers, Docker images and development ports are in the [build, test and release guide](../g4-github-actions/docs/build-test-release.md).
