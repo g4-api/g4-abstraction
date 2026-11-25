@@ -6,6 +6,18 @@ its `v` prefix and the NuGet package version.
 
 ## Unreleased
 
+### Removed
+
+- `G4.Abstraction.WebDriver` moved to g4-engine, with the same package ID and namespace. The engine publishes it from
+  now on, so the engine and this repository no longer depend on each other. Its last version from this repository is
+  2026.11.25.26. The driver table, the driver-plugin guide and the package readme moved with it.
+
+### Changed
+
+- The `ClientApp` sample references the published `G4.Abstraction.WebDriver` package instead of the project.
+
+## 2026.11.25.26
+
 ### Changed
 
 - `G4.Abstraction.WebDriver` uses `G4.WebDriver` and every `G4.WebDriver.Remote.*` and `G4.WebDriver.Simulator`
