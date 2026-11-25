@@ -8,7 +8,11 @@
 	<ItemGroup>
 		<ProjectReference Include="..\G4.Abstraction.Cli\G4.Abstraction.Cli.csproj" />
 		<ProjectReference Include="..\G4.Abstraction.Logging\G4.Abstraction.Logging.csproj" />
-		<ProjectReference Include="..\G4.Abstraction.WebDriver\G4.Abstraction.WebDriver.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- The WebDriver abstraction ships from g4-engine; the sample uses the published package. -->
+		<PackageReference Include="G4.Abstraction.WebDriver" Version="2026.11.25.26" />
 	</ItemGroup>
 
 </Project>
